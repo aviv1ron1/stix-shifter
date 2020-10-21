@@ -569,100 +569,108 @@
     }
   },
   "event": {
-    "original": {
+    "original": [{
       "key": "artifact.payload_bin",
+      "object": "event_payload",
       "transformer": "ToBase64"
-    },
+    }, {
+        "key": "x-ibm-event.original_ref",
+        "object": "event",
+        "references": "event_payload"
+    }, {
+        "key": "x-ibm-event.original",
+        "object": "event"
+    }],
     "action": {
-      "key": "x-ecs-event.action",
+      "key": "x-ibm-event.action",
       "object": "event"
     },
     "id": {
-      "key": "x-ecs-event.id",
+      "key": "x-ibm-event.id",
       "object": "event"
     },
     "category": {
-      "key": "x-ecs-event.category",
+      "key": "x-ibm-event.category",
       "object": "event"
     },
     "code": {
-      "key": "x-ecs-event.code",
+      "key": "x-ibm-event.code",
       "object": "event"
     },
     "created": {
-      "key": "x-ecs-event.created",
+      "key": "x-ibm-event.created",
       "object": "event"
     },
     "dataset": {
-      "key": "x-ecs-event.dataset",
+      "key": "x-ibm-event.dataset",
       "object": "event"
     },
     "duration": {
-      "key": "x-ecs-event.duration",
+      "key": "x-ibm-event.duration",
       "object": "event"
     },
     "end": {
-      "key": "x-ecs-event.end",
+      "key": "x-ibm-event.end",
       "object": "event"
     },
     "hash": {
-      "key": "x-ecs-event.hash",
+      "key": "x-ibm-event.hash",
       "object": "event"
     },
     "ingested": {
-      "key": "x-ecs-event.ingested",
+      "key": "x-ibm-event.ingested",
       "object": "event"
     },
     "kind": {
-      "key": "x-ecs-event.kind",
+      "key": "x-ibm-event.kind",
       "object": "event"
     },
     "module": {
-      "key": "x-ecs-event.module",
+      "key": "x-ibm-event.module",
       "object": "event"
     },
     "outcome": {
-      "key": "x-ecs-event.outcome",
+      "key": "x-ibm-event.outcome",
       "object": "event"
     },
     "provider": {
-      "key": "x-ecs-event.provider",
+      "key": "x-ibm-event.provider",
       "object": "event"
     },
     "reference": {
-      "key": "x-ecs-event.reference",
+      "key": "x-ibm-event.reference",
       "object": "event"
     },
     "risk_score": {
-      "key": "x-ecs-event.risk_score",
+      "key": "x-ibm-event.risk_score",
       "object": "event"
     },
     "risk_score_norm": {
-      "key": "x-ecs-event.risk_score_norm",
+      "key": "x-ibm-event.risk_score_norm",
       "object": "event"
     },
     "sequence": {
-      "key": "x-ecs-event.sequence",
+      "key": "x-ibm-event.sequence",
       "object": "event"
     },
     "severity": {
-      "key": "x-ecs-event.severity",
+      "key": "x-ibm-event.severity",
       "object": "event"
     },
     "start": {
-      "key": "x-ecs-event.start",
+      "key": "x-ibm-event.start",
       "object": "event"
     },
     "timezone": {
-      "key": "x-ecs-event.timezone",
+      "key": "x-ibm-event.timezone",
       "object": "event"
     },
     "type": {
-      "key": "x-ecs-event.type",
+      "key": "x-ibm-event.type",
       "object": "event"
     },
     "url": {
-      "key": "x-ecs-event.url",
+      "key": "x-ibm-event.url",
       "object": "event"
     }
   },
@@ -689,6 +697,11 @@
         "key": "process.parent_ref",
         "object": "process",
         "references": "process_ppid"
+      },
+      {
+        "key": "x-ibm-event.process_ref",
+        "object": "event",
+        "references": "process"
       }
     ],
     "name": {
@@ -705,11 +718,17 @@
         "object": "x_process"
       }
     },
-    "ppid": {
-      "key": "process.pid",
-      "object": "process_ppid",
-      "transformer": "ToInteger"
-    },
+    "ppid": [
+      {
+        "key": "process.pid",
+        "object": "process_ppid",
+        "transformer": "ToInteger"
+      }, {
+        "key": "x-ibm-event.parent_process_ref",
+        "object": "event",
+        "references": "process_ppid"
+      }
+    ],
     "pe": {
       "company": {
         "key": "x-ecs-process.pe_company",
