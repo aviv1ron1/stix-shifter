@@ -118,6 +118,47 @@ class DataSourceObjToStixObj:
         DataSourceObjToStixObj._add_property(obj, obj_prop, stix_value, group)
 
     @staticmethod
+    def _handle_cybox_complex_obj(key_to_add, observation, stix_value, obj_name_map, obj_name, group=False):
+        """
+        Handle the translation of the input property to its STIX CybOX property
+
+        :param key_to_add: STIX property key derived from the mapping file
+        :param observation: the the STIX observation currently being worked on
+        :param stix_value: the STIX value translated from the input object
+        :param obj_name_map: the mapping of object name to actual object
+        :param obj_name: the object name derived from the mapping file
+        """
+        split_key = key_to_add.split('.')
+        obj_type = split_key[-1]
+        objs_dir = observation['objects']
+
+        if obj_name in obj_name_map:
+            obj = objs_dir[obj_name_map[obj_name]]
+        else:
+            obj = {'type': obj_type}
+            obj_dir_key = str(len(objs_dir))
+            objs_dir[obj_dir_key] = obj
+            if obj_name is not None:
+                obj_name_map[obj_name] = obj_dir_key
+
+        
+        child_obj = obj
+        parent_props = split_key[0:-1]
+        for prop in parent_props:
+            if prop not in child_obj:
+                child_obj[prop] = {}
+            child_obj = child_obj[prop]
+
+        
+        child_obj[split_key[-1]] = obj
+        #TODO: add support for group
+        #elif group is True:  # Mapping of multiple data fields to single STIX object field. Ex: Network Protocols
+        #    if (isinstance(child_obj[split_key[-1]], list)):
+        #        child_obj[split_key[-1]].extend(stix_value)        
+
+
+
+    @staticmethod
     def _valid_stix_value(props_map, key, stix_value, unwrap=False):
         """
         Checks that the given STIX value is valid for this STIX property
@@ -172,17 +213,35 @@ class DataSourceObjToStixObj:
                 self.cust_attributes[ds_key.lower()] = to_map
             return
 
+        # get the stix keys that are mapped
+        ds_key_def_obj = ds_map[ds_key]
+        
+            
+
         if isinstance(to_map, dict):
-            self.logger.debug('{} is complex; descending'.format(to_map))
-            # If the object is complex we must descend into the map on both sides
-            for key in to_map.keys():
-                self._transform(object_map, observation, ds_map[ds_key], key, to_map)
-            return
+            if ds_key_def_obj['transformer'] is not None:
+                #if object is a dictionary, but a transformer was defined - pass the whole complex object to the transformer
+                transformer = self.transformers[ds_key_def_obj['transformer']]
+                object_name = ds_key_def_obj.get('object')
+                group = ds_key_def_obj.get('group', False)
+                key_to_add = ds_key_def_obj.get('key')
+                self.logger.debug('{} is complex and has a transformer {} defined. trransforming complex object'.format(to_map, transformer))
+                stix_value = DataSourceObjToStixObj._get_value(obj, ds_key, transformer)
+                    #TODO: validate transformer output is valid stix
+                    #if not DataSourceObjToStixObj._valid_stix_value(self.properties, key_to_add, stix_value):
+                    #    continue
+                DataSourceObjToStixObj._handle_cybox_complex_obj(key_to_add, observation, stix_value, object_map, object_name, group)
+                #DataSourceObjToStixObj._add_property(observation, ds_key_def_obj['key'], stix_value, None)
+                return
+            else:
+                self.logger.debug('{} is complex; descending'.format(to_map))
+                # If the object is complex we must descend into the map on both sides
+                for key in to_map.keys():
+                    self._transform(object_map, observation, ds_map[ds_key], key, to_map)
+                return
 
         generic_hash_key = ''
 
-        # get the stix keys that are mapped
-        ds_key_def_obj = ds_map[ds_key]
         if isinstance(ds_key_def_obj, list):
             ds_key_def_list = ds_key_def_obj
         else:

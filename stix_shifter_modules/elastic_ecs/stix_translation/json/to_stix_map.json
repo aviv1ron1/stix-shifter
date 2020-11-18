@@ -1180,59 +1180,42 @@
     }
   },
   "dns": {
-    "answers": {
-      "class": {
-        "key": "x-ecs-dns.answers_class",
-        "object": "dns"
-      },
-      "data": {
-        "key": "x-ecs-dns.answers_data",
-        "object": "dns"
-      },
-      "name": {
-        "key": "x-ecs-dns.answers_name",
-        "object": "dns"
-      },
-      "ttl": {
-        "key": "x-ecs-dns.answers_ttl",
-        "object": "dns"
-      },
-      "type": {
-        "key": "x-ecs-dns.answers_type",
-        "object": "dns"
-      }
+    "answers": 
+    {
+      "key": "network-traffic.extensions.dns-ext.answers",
+      "object": "nt"
     },
     "header_flags": {
-        "key": "x-ecs-dns.header_flags",
-        "object": "dns"
+        "key": "network-traffic.extensions.dns-ext.header_flags",
+        "object": "nt"
     },
     "id": {
-      "key": "x-ecs-dns.id",
-      "object": "dns"
+      "key": "network-traffic.extensions.dns-ext.dns_id",
+      "object": "nt"
     },
     "op_code": {
-      "key": "x-ecs-dns.op_code",
-      "object": "dns"
+      "key": "network-traffic.extensions.dns-ext.op_code",
+      "object": "nt"
     },
     "question": {
       "class": {
-        "key": "x-ecs-dns.question.class",
-        "object": "dns"
+        "key": "network-traffic.extensions.dns-ext.question.class",
+        "object": "nt"
       },
       "name": [
         {
           "key": "domain-name.value",
-          "object": "dns_domain"
+          "object": "dns_question_domain"
         },
         {
-          "key": "x-ecs-dns.question.name_ref",
-          "object": "dns",
-          "references": "dns_domain"
+          "key": "network-traffic.extensions.dns-ext.question.name_ref",
+          "object": "nt",
+          "references": "dns_question_domain"
         },
         {
           "key": "x-ibm-event.domain_ref",
           "object": "event",
-          "references": "dns_domain"
+          "references": "dns_question_domain"
         }
       ],
       "registered_domain": [
@@ -1241,21 +1224,21 @@
           "object": "dns_registered_domain"
         },
         {
-        "key": "x-ecs-dns.question.registered_domain_ref",
-        "object": "dns",
-        "references": "dns_registered_domain"
+          "key": "network-traffic.extensions.dns-ext.question.registered_domain_ref",
+          "object": "nt",
+          "references": "dns_registered_domain"
         }
       ],
       "subdomain": {
-        "key": "x-ecs-dns.question.subdomain",
-        "object": "dns"
+        "key": "network-traffic.extensions.dns-ext.question.subdomain",
+        "object": "nt"
       },
       "top_level_domain": {
-        "key": "x-ecs-dns.question.top_level_domain",
+        "key": "network-traffic.extensions.dns-ext.question.top_level_domain",
         "object": "dns"
       },
       "type": {
-        "key": "x-ecs-dns.question.type",
+        "key": "network-traffic.extensions.dns-ext.question.type",
         "object": "dns"
       }
     },
@@ -1279,19 +1262,19 @@
         "unwrap": true
       },
       {
-        "key": "x-ecs-dns.resolved_ip_refs",
-        "object": "dns",
+        "key": "network-traffic.extensions.dns-ext.resolved_ip_refs",
+        "object": "nt",
         "references": ["resolved_ip", "resolved_ipv6"],
         "unwrap": true
       }
     ],
     "response_code": {
-      "key": "x-ecs-dns.response_code",
-      "object": "dns"
+      "key": "network-traffic.extensions.dns-ext.response_code",
+      "object": "nt"
     },
     "type": {
-      "key": "x-ecs-dns.type",
-      "object": "dns"
+      "key": "network-traffic.extensions.dns-ext.type",
+      "object": "nt"
     }
   },
   "ecs": {
@@ -1347,11 +1330,6 @@
           "key": "file.parent_directory_ref",
           "object": "file",
           "references": "directory"
-      },
-      {
-          "key": "process.binary_ref",
-          "object": "process",
-          "references": "file"
       }
     ],
     "size": {
@@ -1928,35 +1906,9 @@
     }
   },
   "registry": {
-    "key": {
-      "key": "windows-registry-key.key"
-    },
-    "data": {
-      "bytes": {
-        "key": "x-ecs-registry.data_bytes",
-        "object": "registry"
-      },
-      "strings": {
-        "key": "x-ecs-registry.data_strings",
-        "object": "registry"
-      },
-      "type": {
-        "key": "x-ecs-registry.data_type",
-        "object": "registry"
-      }
-    },
-    "hive": {
-      "key": "x-ecs-registry.hive",
-      "object": "registry"
-    },
-    "path": {
-      "key": "x-ecs-registry.path",
-      "object": "registry"
-    },
-    "value": {
-      "key": "x-ecs-registry.value",
-      "object": "registry"
-    }
+    "key": "x-ibm-event.windows-registry-key",
+    "transformer": "EcsRegistryTransformer",
+    "object": "event"
   },
   "related": {
     "hash": {

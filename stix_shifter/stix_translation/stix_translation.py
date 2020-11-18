@@ -26,6 +26,7 @@ class StixTranslation:
 
     def __init__(self):
         self.args = []
+        logger.init("DEBUG")
         self.logger = logger.set_logger(__name__)
 
     def translate(self, module, translate_type, data_source, data, options={}, recursion_limit=1000):
@@ -50,6 +51,9 @@ class StixTranslation:
             try:
                 connector_module = importlib.import_module("stix_shifter_modules." + module + ".entry_point")
             except Exception as ex:
+                track = traceback.format_exc()
+                self.logger.error(ex)
+                self.logger.debug(track)
                 raise UnsupportedDataSourceException("{} is an unsupported data source.".format(module))
             try:
                 if not translate_type == DIALECTS:
