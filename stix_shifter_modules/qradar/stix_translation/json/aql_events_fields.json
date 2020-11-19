@@ -49,7 +49,6 @@
     "SourceImage",
     "Signed",
     "\"IMP Hash\" as IMPHash",
-    "LoadedImage",
     "ServiceFileName"
   ]
 }
