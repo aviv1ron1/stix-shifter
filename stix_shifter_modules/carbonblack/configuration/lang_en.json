@@ -23,8 +23,8 @@
         },
         "options": {
             "events_mode": {
-                "label": "Show Events?",
-                "description": "Display results as events details instead of processes details."
+                "label": "Include Process Events?",
+                "description": "Include also process events in the results? When disabled only process metadata will be returned."
             }
         }
     },
